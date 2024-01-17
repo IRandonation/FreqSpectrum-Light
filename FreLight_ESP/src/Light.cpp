@@ -20,7 +20,7 @@ bool buttonReleased = false;
 unsigned long buttonPressTime = 0;
 int ButtonNumber = 0;
 
-#define DATA_PIN 27
+#define DATA_PIN 16
 
 #define MATRIX_HEIGHT 8
 #define MATRIX_WIDTH  16
