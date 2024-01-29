@@ -5,11 +5,11 @@
 #define SAMPLES 512 //number of sample
 #define SAMPLING_FREQUENCY 10240 //frequncy of sampel
 #define NUM_LED 128 //number of LED
-#define audio_PIN 2
+#define audio_PIN 25
 
 arduinoFFT FFT = arduinoFFT(); //creat a fft project
 
-int gain = 30; //adjust it to fit the volume
+int gain = 7; //adjust it to fit the volume
 
 static double vReal[SAMPLES];
 static double vImag[SAMPLES];
@@ -17,7 +17,7 @@ double fft_bin[SAMPLES];
 double fft_data[16];
 int fft_result[16]; //there are 16 column leds in total
 
-double fft_freq_boost[16] = {1.02,1.04,1.08,1.10,1.12,1.15,1.17,1.20,1.30,2.11,3.25,3.52,4.22,4.82,6.53,7.02};//adjust single frequency curves.
+double fft_freq_boost[16] = {1.02,1.04,1.08,1.10,1.12,1.15,1.17,1.20,1.30,2.11,0.95,0.52,0.82,0.52,0.53,0.82};//adjust single frequency curves.
 
 uint8_t bar_height[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 uint8_t prev_fft_value[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -35,12 +35,11 @@ double fft_add(int from, int to) {
 
 void light() {
     static uint32_t tStart = 0;
-   
     for(int i = 0; i < SAMPLES; i++) {
         vReal[i] = abs(analogRead(audio_PIN));
         vImag[i] = 0;
         //Serial.println(vReal[i]);
-        delayMicroseconds(1000000 / SAMPLING_FREQUENCY);
+        delayMicroseconds(500000 / SAMPLING_FREQUENCY);
     }
 
     FFT.DCRemoval();
@@ -93,31 +92,31 @@ void light() {
                 break;
 
             case 6:
-                leds[i*8+j] = CRGB(210,20,0);
+                leds[i*8+j] = CRGB(223,0,32);
                 break;
 
             case 5:
-                leds[i*8+j] = CRGB(210,30,0);
+                leds[i*8+j] = CRGB(191,0,64);
                 break;
 
             case 4:
-                leds[i*8+j] = CRGB(191,64,0);
+                leds[i*8+j] = CRGB(159,0,96);
                 break;
 
             case 3:
-                leds[i*8+j] = CRGB(128,128,0);
+                leds[i*8+j] = CRGB(127,0,128);
                 break;
 
             case 2:
-                leds[i*8+j] = CRGB(64,191,0);
+                leds[i*8+j] = CRGB(95,0,160);
                 break;
 
             case 1:
-                leds[i*8+j] = CRGB(30,210,0);
+                leds[i*8+j] = CRGB(63,0,192);
                 break;
 
             case 0:
-                leds[i*8+j] = CRGB(0,225,0);
+                leds[i*8+j] = CRGB(0,0,255);
                 break;
             
             default:
@@ -127,7 +126,6 @@ void light() {
     }
     FastLED.show();
     FastLED.clear();
-
     
 }
    
