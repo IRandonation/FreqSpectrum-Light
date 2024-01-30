@@ -3,13 +3,13 @@
 #include <FastLED.h>
 
 #define SAMPLES 512 //number of sample
-#define SAMPLING_FREQUENCY 10240 //frequncy of sampel
+#define SAMPLING_FREQUENCY 7680 //frequncy of sampel
 #define NUM_LED 128 //number of LED
 #define audio_PIN 25
 
 arduinoFFT FFT = arduinoFFT(); //creat a fft project
 
-int gain = 7; //adjust it to fit the volume
+int gain = 8; //adjust it to fit the volume
 
 static double vReal[SAMPLES];
 static double vImag[SAMPLES];
@@ -17,12 +17,14 @@ double fft_bin[SAMPLES];
 double fft_data[16];
 int fft_result[16]; //there are 16 column leds in total
 
-double fft_freq_boost[16] = {1.02,1.04,1.08,1.10,1.12,1.15,1.17,1.20,1.30,2.11,0.95,0.52,0.82,0.52,0.53,0.82};//adjust single frequency curves.
+double fft_freq_boost[16] = {1.02,1.03,1.04,1.06,1.08,1.10,1.10,1.15,1.12,1.13,1.15,1.06,1.17,1.08,1.00,1.01};//adjust single frequency curves.
 
 uint8_t bar_height[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 uint8_t prev_fft_value[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 CRGB leds[NUM_LED];
+
+double noiseThreshold = 100.0; // Noise threshold
 
 double fft_add(int from, int to) {
     int i = from;
@@ -43,16 +45,15 @@ void light() {
     }
 
     FFT.DCRemoval();
-    FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+    FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_BLACKMAN, FFT_FORWARD);
     FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
     FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
 
     for(int i = 0; i < SAMPLES; i++){
-            double t = 0.0;
-            t = abs(vReal[i]);
-            t = t / 16.0;
-            fft_bin[i] =t;
-        }
+        double t = abs(vReal[i]);
+        t = t / 16.0;
+        fft_bin[i] = t > noiseThreshold ? t : 0; // Apply noise filter
+    }
     
     fft_data[0]  =  (fft_add(3,5))/3;        //60-120hz
     fft_data[1]  =  (fft_add(5,7))/3;        //100-160hz
