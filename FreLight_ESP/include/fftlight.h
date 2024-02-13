@@ -9,7 +9,7 @@
 
 arduinoFFT FFT = arduinoFFT(); //creat a fft project
 
-int gain = 8; //adjust it to fit the volume
+int gain = 7; //adjust it to fit the volume
 
 static double vReal[SAMPLES];
 static double vImag[SAMPLES];
@@ -24,7 +24,7 @@ uint8_t prev_fft_value[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 CRGB leds[NUM_LED];
 
-double noiseThreshold = 100.0; // Noise threshold
+double noiseThreshold = 95.0; // Noise threshold
 
 double fft_add(int from, int to) {
     int i = from;

@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/Project/Connected_Project/FreLight_ESP/FreLight_ESP/.pio/libdeps/esp32dev/FastLED"
+    "cmake.sourceDirectory": "D:/Project/Connected_Project/FreLight_ESP/FreLight_ESP/.pio/libdeps/esp32dev/FastLED",
+    "cmake.configureOnOpen": false
 }
